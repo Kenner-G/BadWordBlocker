@@ -8,8 +8,12 @@
 
 namespace surva\badwordblocker;
 
+use pocketmine\plugin\PluginBase;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\command\Command;
+use pocketmine\command\CommandSender;
+use pocketmine\command\ConsoleCommandSender;
 
 class EventListener implements Listener {
     /* @var BadWordBlocker */
@@ -25,9 +29,10 @@ class EventListener implements Listener {
     public function onPlayerChat(PlayerChatEvent $event) {
         $player = $event->getPlayer();
         $message = $event->getMessage();
-
+        $command = ("warn " . $player . " Using-Profanity 2");
         if($this->getBadWordBlocker()->contains($message, $this->getBadWordBlocker()->getList())) {
             $player->sendMessage($this->getBadWordBlocker()->getConfig()->get("blockmessage"));
+            $server->dispatchCommand(new ConsoleCommandSender(), '$command');
             $event->setCancelled(true);
 
             return;
